@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+chown -R elasticsearch:elasticsearch /data
+
+export ES_HOSTS=$(k8s-app-config hosts -n $K8S_NAMESPACE -s $K8S_SERVICE -w 5 -m ${ES_MIN_MASTER_NODES:-2} -f '"{{ join .hosts "," }}"')
+env-config-writer /elasticsearch.yml.etp /elasticsearch-$ELASTICSEARCH_VERSION/config/elasticsearch.yml
+env-config-writer /log4j2.properties.etp /elasticsearch-$ELASTICSEARCH_VERSION/config/log4j2.properties
+
+su-exec elasticsearch /elasticsearch-$ELASTICSEARCH_VERSION/bin/elasticsearch

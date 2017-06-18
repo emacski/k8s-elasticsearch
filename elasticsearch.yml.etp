@@ -1,0 +1,15 @@
+cluster.name: {{if .es_cluster_name}}{{.es_cluster_name}}{{else}}kubernetes-logging{{end}}
+
+node.name: {{if .es_node_name}}{{.es_node_name}}{{else}}{{.hostname}}{{end}}
+node.master: {{if .es_node_master}}{{.es_node_master}}{{else}}true{{end}}
+node.data: {{if .es_node_data}}{{.es_node_data}}{{else}}true{{end}}
+
+transport.tcp.port: {{if .es_transport_port}}{{.es_transport_port}}{{else}}9300{{end}}
+http.port: {{if .es_http_port}}{{.es_http_port}}{{else}}9200{{end}}
+
+path.data: /data
+
+network.host: 0.0.0.0
+
+discovery.zen.minimum_master_nodes: {{if .es_min_master_nodes}}{{.es_min_master_nodes}}{{else}}2{{end}}
+discovery.zen.ping.unicast.hosts: {{if .es_hosts}}{{.es_hosts}}{{else}}""{{end}}
