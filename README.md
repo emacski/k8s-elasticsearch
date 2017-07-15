@@ -10,7 +10,7 @@ es-image in the fluentd-elasticsearch cluster-level logging addon.
 
 | Component | Version |
 | --------- | ------- |
-| elasticsearch | 5.4.1 |
+| elasticsearch | 5.5.0 |
 
 **Required Configuration**
 

@@ -4,7 +4,7 @@ FROM openjdk:8-jre-alpine
 LABEL image.name="k8s-elasticsearch" \
       image.maintainer="Erik Maciejewski <mr.emacski@gmail.com>"
 
-ENV ELASTICSEARCH_VERSION=5.4.1
+ENV ELASTICSEARCH_VERSION=5.5.0
 
 RUN apk --no-cache add \
     'su-exec>=0.2' \

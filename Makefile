@@ -20,7 +20,7 @@ shell:
 	docker run --rm -ti --entrypoint /bin/sh $(NS)/$(REPO):$(VERSION)
 
 run:
-	docker run --rm $(NS)/$(REPO):$(VERSION)
+	docker run --rm --init $(NS)/$(REPO):$(VERSION)
 
 _validate-release:
 ifeq ($(VERSION),latest)
