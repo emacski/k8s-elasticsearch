@@ -1,6 +1,6 @@
 cluster.name: {{if .es_cluster_name}}{{.es_cluster_name}}{{else}}kubernetes-logging{{end}}
 
-node.name: {{if .es_node_name}}{{.es_node_name}}{{else}}{{.hostname}}{{end}}
+node.name: {{if .es_node_name}}{{.es_node_name}}{{else}}{{.HOSTNAME}}{{end}}
 node.master: {{if .es_node_master}}{{.es_node_master}}{{else}}true{{end}}
 node.data: {{if .es_node_data}}{{.es_node_data}}{{else}}true{{end}}
 

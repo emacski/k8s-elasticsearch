@@ -3,41 +3,42 @@
 Kubernetes Elasticsearch
 -----------------------
 
-Alternative elasticsearch docker image designed as a drop-in replacement for the
-es-image in the fluentd-elasticsearch cluster-level logging addon.
+Alternative elasticsearch docker image designed as a drop-in replacement for the es-image in the fluentd-elasticsearch cluster-level logging addon.
 
 **Components**
 
 | Component | Version |
 | --------- | ------- |
-| elasticsearch | 5.5.0 |
+| elasticsearch | 5.5.1 |
 
 **Required Configuration**
 
 | Environment Variable | Description |
 | -------------------- | ----------- |
-| `K8S_NAMESPACE` | The k8s namespace of the elasticsearch cluster |
-| `K8S_SERVICE` | The k8s service of the elasticsearch cluster |
+| `k8s_namespace` | The k8s namespace of the elasticsearch cluster |
+| `k8s_service` | The k8s service of the elasticsearch cluster |
 
 **Configuration**
 
+Uses [ReDACT](https://github.com/emacski/redact) for elasticsearch configuration.
+
 | Environment Variable | Description |
 | -------------------- | ----------- |
-| `ES_CLUSTER_NAME` | The name of the elasticsearch cluster (Default: `kubernetes-logging`) |
-| `ES_NODE_NAME` | The name of the elasticsearch node (Default: `$HOSTNAME`) |
-| `ES_NODE_MASTER` | Whether or not this node is eligible to be a master node (Default: `true`) |
-| `ES_NODE_DATA` | Whether or not this node is eligible to be a data node (Default: `true`) |
-| `ES_TRANSPORT_PORT` | The elasticsearch transport port (Default: `9300`) |
-| `ES_HTTP_PORT` | The elasticsearch http port (Default: `9200`) |
-| `ES_MIN_MASTER_NODES` | The minimum number of master nodes (Default: `2`) |
+| `es_cluster_name` | The name of the elasticsearch cluster (Default: `kubernetes-logging`) |
+| `es_node_name` | The name of the elasticsearch node (Default: `$HOSTNAME`) |
+| `es_node_master` | Whether or not this node is eligible to be a master node (Default: `true`) |
+| `es_node_data` | Whether or not this node is eligible to be a data node (Default: `true`) |
+| `es_transport_port` | The elasticsearch transport port (Default: `9300`) |
+| `es_http_port` | The elasticsearch http port (Default: `9200`) |
+| `es_min_master_nodes` | The minimum number of master nodes (Default: `2`) |
 
 **Special Configuration**
 
-These configuration directives are automatically resolved using the `k8s-app-config` helper utility
+These configuration directives are automatically resolved using [ReDACT](https://github.com/emacski/redact) and the `k8s-app-config` helper utility
 
 | Environment Variable | Description |
 | -------------------- | ----------- |
-| `ES_HOSTS` | The elasticsearch hosts in the cluster, used for discovery (Default: empty) |
+| `es_hosts` | The elasticsearch hosts in the cluster, used for discovery (Default: empty) |
 
 **Example ReplicaSet Deployment and Service**
 ```yaml
@@ -81,11 +82,11 @@ spec:
         - name: es-persistent-storage
           mountPath: /data
         env:
-        - name: "K8S_NAMESPACE"
+        - name: "k8s_namespace"
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        - name: "K8S_SERVICE"
+        - name: "k8s_service"
           value: "elasticsearch-logging"
       volumes:
       - name: es-persistent-storage

@@ -4,22 +4,23 @@ FROM openjdk:8-jre-alpine
 LABEL image.name="k8s-elasticsearch" \
       image.maintainer="Erik Maciejewski <mr.emacski@gmail.com>"
 
-ENV ELASTICSEARCH_VERSION=5.5.0
+ENV REDACT_VERSION=0.1.0 \
+    ELASTICSEARCH_VERSION=5.5.1
 
 RUN apk --no-cache add \
-    'su-exec>=0.2' \
     bash \
     curl \
   # install utils
-  && curl -L https://github.com/emacski/k8s-app-config/releases/download/v0.1.0/k8s-app-config -o /usr/local/bin/k8s-app-config \
-  && curl -L https://github.com/emacski/env-config-writer/releases/download/v0.1.0/env-config-writer -o /usr/local/bin/env-config-writer \
-  && chmod +x /usr/local/bin/k8s-app-config /usr/local/bin/env-config-writer \
+  && curl -L https://github.com/emacski/k8s-app-config/releases/download/v0.1.0/k8s-app-config -o /usr/bin/k8s-app-config \
+  && curl -L https://github.com/emacski/redact/releases/download/v$REDACT_VERSION/redact -o /usr/bin/redact \
+  && chmod +x /usr/bin/k8s-app-config /usr/bin/redact \
   # install elasticsearch
   && curl -OL https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$ELASTICSEARCH_VERSION.tar.gz \
   && tar -xf elasticsearch-$ELASTICSEARCH_VERSION.tar.gz \
+  && mv elasticsearch-$ELASTICSEARCH_VERSION elasticsearch \
   && mkdir /data \
   && addgroup -S elasticsearch && adduser -S -G elasticsearch elasticsearch \
-  && chown -R elasticsearch:elasticsearch /elasticsearch-$ELASTICSEARCH_VERSION \
+  && chown -R elasticsearch:elasticsearch /elasticsearch \
   && chown -R elasticsearch:elasticsearch /data \
   # clean up
   && rm elasticsearch-$ELASTICSEARCH_VERSION.tar.gz \
@@ -37,4 +38,9 @@ ARG GIT_COMMIT=none
 LABEL build.git.url=$GIT_URL \
       build.git.commit=$GIT_COMMIT
 
-ENTRYPOINT ["/elasticsearch-config-wrapper"]
+ENTRYPOINT ["redact", "entrypoint", \
+            "--pre-render", "/pre-render.sh", \
+            "--default-tpl-path", "/elasticsearch.yml.redacted", \
+            "--default-cfg-path", "/elasticsearch/config/elasticsearch.yml", \
+            "--", \
+            "elasticsearch", "/elasticsearch/bin/elasticsearch"]
