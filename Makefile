@@ -40,7 +40,7 @@ cleanup:
 	exit 0
 
 clean:
-	# remove all images for namespace emacski and repo k8s-kibana
+	# remove all images for namespace emacski and repo
 	@docker images -f "label=image.name=$(REPO)" | grep "$(NS)" && \
 	docker rmi $$(docker images -f "label=image.name=$(REPO)" | grep "$(NS)" | awk '{print $$3}') || \
 	exit 0
