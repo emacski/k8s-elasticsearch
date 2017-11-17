@@ -5,7 +5,7 @@ LABEL image.name="k8s-elasticsearch" \
       image.maintainer="Erik Maciejewski <mr.emacski@gmail.com>"
 
 ENV REDACT_VERSION=0.2.0 \
-    ELASTICSEARCH_VERSION=5.6.3
+    ELASTICSEARCH_VERSION=6.0.0
 
 RUN apk --no-cache add \
         bash \
