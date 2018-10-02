@@ -1,14 +1,15 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:8-jre-slim
 
 # image metadata
 LABEL image.name="k8s-elasticsearch" \
       image.maintainer="Erik Maciejewski <mr.emacski@gmail.com>"
 
 ENV REDACT_VERSION=0.2.0 \
-    ELASTICSEARCH_VERSION=6.0.0
+    ELASTICSEARCH_VERSION=6.4.2
 
-RUN apk --no-cache add \
-        bash \
+RUN rm -f /bin/sh && ln -s /bin/bash /bin/sh \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
         curl \
     && curl -L https://github.com/emacski/k8s-app-config/releases/download/v0.1.0/k8s-app-config -o /usr/bin/k8s-app-config \
     && curl -L https://github.com/emacski/redact/releases/download/v$REDACT_VERSION/redact -o /usr/bin/redact \
@@ -17,11 +18,14 @@ RUN apk --no-cache add \
     && tar -xf elasticsearch-$ELASTICSEARCH_VERSION.tar.gz \
     && mv elasticsearch-$ELASTICSEARCH_VERSION elasticsearch \
     && mkdir /data \
-    && addgroup -S elasticsearch && adduser -S -G elasticsearch elasticsearch \
+    && addgroup --system elasticsearch && useradd --system -g elasticsearch elasticsearch \
     && chown -R elasticsearch:elasticsearch /elasticsearch \
     && chown -R elasticsearch:elasticsearch /data \
     && rm elasticsearch-$ELASTICSEARCH_VERSION.tar.gz \
-    && apk del curl
+    && apt-get remove -y --auto-remove \
+        curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY . /
 

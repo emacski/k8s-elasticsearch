@@ -9,7 +9,7 @@ Alternative elasticsearch docker image designed as a drop-in replacement for the
 
 | Component | Version |
 | --------- | ------- |
-| elasticsearch | 6.0.0 |
+| elasticsearch | 6.4.2 |
 
 **Required Configuration**
 

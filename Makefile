@@ -7,6 +7,8 @@ GIT_COMMIT?=none
 
 .PHONY: build push shell run _validate-release release cleanup clean
 
+default: build
+
 build:
 	docker build --pull \
 	--build-arg GIT_URL=$(GIT_URL) \
@@ -44,6 +46,3 @@ clean:
 	@docker images -f "label=image.name=$(REPO)" | grep "$(NS)" && \
 	docker rmi $$(docker images -f "label=image.name=$(REPO)" | grep "$(NS)" | awk '{print $$3}') || \
 	exit 0
-
-
-default: build
